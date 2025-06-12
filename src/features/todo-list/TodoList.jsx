@@ -13,6 +13,8 @@ export const TodoList = () => {
                         ...i,
                         completed: !i.completed,
                     }
+                } else {
+                    return { ...i }
                 }
             })
         )
@@ -22,6 +24,14 @@ export const TodoList = () => {
             return [...prev, { id: todo.length, text: input, completed: false }]
         })
         setInput("")
+    }
+
+    function deleteItem(id) {
+        setTodo((prev) => {
+            {
+                return prev.filter((todo) => todo.id !== id)
+            }
+        })
     }
     return (
         <div>
@@ -36,33 +46,40 @@ export const TodoList = () => {
 
             <button
                 onClick={() => {
-                    if (input.trim(" ") !== "") {
+                    if (input.trim() !== "") {
                         addTodo()
                     }
                 }}
             >
                 Add
             </button>
-            <ul className="list-disc">
-                {todo.map((t) => {
-                    return (
-                        <li
-                            key={t.id}
-                            className={` ${
-                                t.completed ? "line-through" : ""
-                            }  `}
-                        >
+            <ul className="list-disc pl-5">
+                {todo.map((t) => (
+                    <li key={t.id}>
+                        <div className="flex  items-center gap-4">
                             <input
                                 type="checkbox"
-                                onClick={() => {
-                                    strikethroughToggler(t.id)
-                                }}
-                            ></input>
-                            <span>{t.text}</span>
-                            <span>{t.completed}</span>
-                        </li>
-                    )
-                })}
+                                checked={t.completed}
+                                onChange={() => strikethroughToggler(t.id)}
+                            />
+                            <span
+                                className={
+                                    t.completed
+                                        ? "line-through flex-1 justify-items-center"
+                                        : "flex-1 justify-items-center"
+                                }
+                            >
+                                {t.text}
+                            </span>
+                            <button
+                                onClick={() => deleteItem(t.id)}
+                                className="p-2 text-white bg-red-600"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </li>
+                ))}
             </ul>
         </div>
     )
